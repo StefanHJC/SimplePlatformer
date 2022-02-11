@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyboardMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpDelay;
     [SerializeField] private float _jumpStrength;
+    [SerializeField] private Rigidbody2D _rigidbody;
 
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
-    private float _elapsedAfterJump;
     private Vector2 _currentDirection;
     private Vector2 _spriteDirection;
+    private float _elapsedAfterJump;
 
     private void Start()
     {
@@ -24,9 +25,13 @@ public class KeyboardMovement : MonoBehaviour
 
     void Update()
     {
+        
         SetMoveDirection();
         Move();
-        Jump();
+        _elapsedAfterJump += Time.deltaTime;
+
+        if (_elapsedAfterJump > _jumpDelay)
+            Jump();
     }
 
     private void SetMoveDirection()
@@ -52,18 +57,6 @@ public class KeyboardMovement : MonoBehaviour
         _currentDirection = Vector2.zero;
     }
 
-    private void Move()
-    {
-        if (_currentDirection.x == 0)
-        {
-            _animator.SetBool("IsRunning", false);
-            return;
-        }
-        SetSpriteDirection();
-        _animator.SetBool("IsRunning", true);
-        transform.Translate(_currentDirection.x * _speed * Time.deltaTime, 0, 0);
-    }
-
     private void SetSpriteDirection()
     {
         if (_currentDirection.x == _spriteDirection.x)
@@ -82,12 +75,24 @@ public class KeyboardMovement : MonoBehaviour
         }
     }
 
+    private void Move()
+    {
+        if (_currentDirection.x == 0)
+        {
+            _animator.SetBool("IsRunning", false);
+            return;
+        }
+        SetSpriteDirection();
+        _animator.SetBool("IsRunning", true);
+        transform.Translate(_currentDirection.x * _speed * Time.deltaTime, 0, 0);
+    }
+
     private void Jump()
     {
         if (_currentDirection.y == 0)
             return;
 
-        transform.Translate(0, _currentDirection.y * _jumpStrength * Time.deltaTime, 0);
+        _rigidbody.AddForce(Vector2.up * _jumpStrength);
         _elapsedAfterJump = 0;
     }
 }
