@@ -27,8 +27,11 @@ public class ResourceSpawner : MonoBehaviour
     {
         _elapsedTime += Time.deltaTime;
 
-        if (_currentPoint >= _spawnTarget.childCount || _elapsedTime < _spawnDelay)
+        if (_elapsedTime < _spawnDelay)
             return;
+
+        if (_currentPoint >= _spawnTarget.childCount)
+            _currentPoint = 0;
 
         SpawnObject();
         _currentPoint++;
@@ -37,6 +40,9 @@ public class ResourceSpawner : MonoBehaviour
 
     private void SpawnObject()
     {
+        if (_spawnPoints[_currentPoint].childCount > 0)
+            return;
+
         GameObject newObject = Instantiate(_template.gameObject, _spawnPoints[_currentPoint]);
     }
 }

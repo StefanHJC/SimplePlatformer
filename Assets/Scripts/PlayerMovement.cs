@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
         _elapsedAfterJump = _jumpDelay;
     }
 
-    void Update()
+    private void Update()
     {
         
         SetMoveDirection();

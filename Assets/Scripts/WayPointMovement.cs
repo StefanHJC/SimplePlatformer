@@ -75,7 +75,4 @@ public class WayPointMovement : MonoBehaviour
     {
         transform.position = Vector2.MoveTowards(transform.position, point.position, _speed * Time.deltaTime);
     }
-
-
-
 }
