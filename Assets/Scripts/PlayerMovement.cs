@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent (typeof(SpriteRenderer))]
+
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float _speed;
@@ -79,11 +82,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_currentDirection.x == 0)
         {
-            _animator.SetBool("IsRunning", false);
+            _animator.SetBool(AnimatorPlayer.Params.States.IsRunning, false);
             return;
         }
         SetSpriteDirection();
-        _animator.SetBool("IsRunning", true);
+        _animator.SetBool(AnimatorPlayer.Params.States.IsRunning, true);
         transform.Translate(_currentDirection.x * _speed * Time.deltaTime, 0, 0);
     }
 
