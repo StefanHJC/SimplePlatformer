@@ -53,7 +53,6 @@ public class WayPointMovement : MonoBehaviour
 
         if (currentDirection.normalized.x == _spriteDirection.x)
         {
-            Debug.Log("HUI");
             return;
         }
         else if (currentDirection.normalized.x == -1)

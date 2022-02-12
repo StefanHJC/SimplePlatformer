@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(AudioSource))]
+
 public class Resource : MonoBehaviour
 {
     [SerializeField] private UnityEvent _reached = new UnityEvent();
 
-    private string _onSpawnEffect;
-    private string _onDestroyEffect;
+    private SpriteRenderer _spriteRenderer;
+    private BoxCollider2D _boxCollider2D;
+    private AudioSource _onPickUpSound;
 
     private void Start()
     {
-        _onDestroyEffect = "¡¿’Õ”À œ»¬¿";
-        _onSpawnEffect = "¡”À‹ ¡”À‹ ¡”À‹";
-
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+        _onPickUpSound = GetComponent<AudioSource>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -22,21 +26,18 @@ public class Resource : MonoBehaviour
         if (collision.TryGetComponent<Player>(out Player player))
         {
             _reached?.Invoke();
+            _spriteRenderer.enabled = false;
+            _boxCollider2D.enabled = false;
+            StartCoroutine(DeleteAfterPlayingEffects());
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private IEnumerator DeleteAfterPlayingEffects()
     {
-        if (collision.TryGetComponent<Player>(out Player player))
-            Destroy(gameObject);
-    }
+        var WaitForEffectsEnding = new WaitForSeconds(_onPickUpSound.clip.length + 1F);
 
-    private void OnDestroy()
-    {
-        Debug.Log(_onDestroyEffect);
-    }
+        yield return WaitForEffectsEnding;
 
-    private void OnEnable()
-    {
+        Destroy(gameObject);
     }
 }
