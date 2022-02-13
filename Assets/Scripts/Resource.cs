@@ -5,20 +5,19 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent (typeof(SpriteRenderer))]
 
 public class Resource : MonoBehaviour
 {
     [SerializeField] private UnityEvent _reached = new UnityEvent();
+    [SerializeField] private AudioSource _onPickUpSound;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
-    private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _boxCollider2D;
-    private AudioSource _onPickUpSound;
 
     private void Start()
     {
         _boxCollider2D = GetComponent<BoxCollider2D>();
-        _onPickUpSound = GetComponent<AudioSource>();
-        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -28,16 +27,7 @@ public class Resource : MonoBehaviour
             _reached?.Invoke();
             _spriteRenderer.enabled = false;
             _boxCollider2D.enabled = false;
-            StartCoroutine(DeleteAfterPlayingEffects());
+            Destroy(gameObject, _onPickUpSound.clip.length);
         }
-    }
-
-    private IEnumerator DeleteAfterPlayingEffects()
-    {
-        var WaitForEffectsEnding = new WaitForSeconds(_onPickUpSound.clip.length + 1F);
-
-        yield return WaitForEffectsEnding;
-
-        Destroy(gameObject);
     }
 }
