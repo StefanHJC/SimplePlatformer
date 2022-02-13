@@ -28,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        
         SetMoveDirection();
         Move();
         _elapsedAfterJump += Time.deltaTime;
@@ -39,21 +38,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void SetMoveDirection()
     {
+        void SetLeft()
+        {
+            _currentDirection.x = -1;
+            _currentDirection.y = 0;
+        }
+        void SetRight()
+        {
+            _currentDirection.x = 1;
+            _currentDirection.y = 0;
+        }
+        void SetJump() => _currentDirection.y = 1;
+
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.Space))
         {
             if (Input.GetKey(KeyCode.A))
             {
-                _currentDirection.x = -1;
-                _currentDirection.y = 0;
+                SetLeft();
             }
             if (Input.GetKey(KeyCode.D))
             {
-                _currentDirection.x = 1;
-                _currentDirection.y = 0;
+                SetRight();
             }
             if (Input.GetKey(KeyCode.Space))
             {
-                _currentDirection.y = 1;
+                SetJump();
             }
             return;
         }
@@ -62,20 +71,24 @@ public class PlayerMovement : MonoBehaviour
 
     private void SetSpriteDirection()
     {
-        if (_currentDirection.x == _spriteDirection.x)
-        {
-            return;
-        }
-        else if (_currentDirection.x == -1)
+        void SetRight()
         {
             _spriteDirection.x = -1;
             _spriteRenderer.flipX = true;
         }
-        else if (_currentDirection.x == 1)
+        void SetLeft()
         {
             _spriteDirection.x = 1;
             _spriteRenderer.flipX = false;
         }
+        if (_currentDirection.x == _spriteDirection.x)
+            return;
+
+        else if (_currentDirection.x == -1)
+            SetRight();
+
+        else if (_currentDirection.x == 1)
+            SetLeft();
     }
 
     private void Move()
@@ -95,6 +108,7 @@ public class PlayerMovement : MonoBehaviour
         if (_currentDirection.y == 0)
             return;
 
+        _animator.SetTrigger(AnimatorPlayer.Params.States.Jump);
         _rigidbody.AddForce(Vector2.up * _jumpStrength);
         _elapsedAfterJump = 0;
     }

@@ -9,6 +9,7 @@ public static class AnimatorPlayer
         public static class States
         {
             public const string IsRunning = nameof(IsRunning);
+            public const string Jump = nameof(Jump);
             public const string Idle = nameof(Idle);
         }
     }

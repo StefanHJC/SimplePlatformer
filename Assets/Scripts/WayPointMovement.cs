@@ -49,22 +49,26 @@ public class WayPointMovement : MonoBehaviour
 
     private void SetSpriteDirection()
     {
-        var currentDirection = GetDirection(_wayPoints[_currentPointIndex]);
+        var currentDirection = GetDirection(_wayPoints[_currentPointIndex]).normalized;
 
-        if (currentDirection.normalized.x == _spriteDirection.x)
-        {
-            return;
-        }
-        else if (currentDirection.normalized.x == -1)
+        void SetRight()
         {
             _spriteDirection.x = -1;
             _spriteRenderer.flipX = true;
         }
-        else if (currentDirection.normalized.x == 1)
+        void SetLeft()
         {
             _spriteDirection.x = 1;
             _spriteRenderer.flipX = false;
         }
+        if (currentDirection.x == _spriteDirection.x)
+            return;
+
+        else if (currentDirection.x == -1)
+            SetRight();
+
+        else if (currentDirection.x == 1)
+            SetLeft();
     }
 
     private Vector2 GetDirection(Transform point)
