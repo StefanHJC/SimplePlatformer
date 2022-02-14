@@ -20,6 +20,7 @@ public class ResourceSpawner : MonoBehaviour
         for (int i = 0; i < _spawnPoints.Length; i++)
         {
             _spawnPoints[i] = _spawnTarget.GetChild(i);
+            SpawnObject(i);
         }
     }
 
@@ -33,16 +34,22 @@ public class ResourceSpawner : MonoBehaviour
         if (_currentPoint >= _spawnTarget.childCount)
             _currentPoint = 0;
 
-        SpawnObject();
-        _currentPoint++;
-        _elapsedTime = 0;
+        SpawnObjectIfPointFree();
     }
 
-    private void SpawnObject()
+    private void SpawnObject(int index)
+    {
+        GameObject newObject = Instantiate(_template.gameObject, _spawnPoints[index]);
+    }
+
+    private void SpawnObjectIfPointFree()
     {
         if (_spawnPoints[_currentPoint].childCount > 0)
+        {
+            _currentPoint++;
             return;
-
-        GameObject newObject = Instantiate(_template.gameObject, _spawnPoints[_currentPoint]);
+        }
+        SpawnObject(_currentPoint);
+        _elapsedTime = 0;
     }
 }
