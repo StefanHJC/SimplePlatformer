@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 
 [RequireComponent(typeof(TMP_Text))]
-
 public class ResourceCounter : MonoBehaviour
 {
     [SerializeField] private Player _player;
@@ -14,14 +13,10 @@ public class ResourceCounter : MonoBehaviour
     private void Start()
     {
         _count = GetComponent<TMP_Text>();
+        _player.ResourcePickuped += OnResourceAmountChanged;
     }
 
-    private void Update()
-    {
-        ShowCurrentAmount();
-    }
-
-    private void ShowCurrentAmount()
+    private void OnResourceAmountChanged()
     {
         _count.text = _player.RescourceAmount.ToString();
     }
